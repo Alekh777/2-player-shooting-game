@@ -83,7 +83,7 @@ function createLaser(player, isPressed){
         p1L.style.top = p1LaserPos.y + "px"
         p1L.classList.add('created1')
         container.appendChild(p1L)
-        moveLaser()
+        moveLaser('p1')
     }
     
     if(player === 'p2' && isPressed && !isMoving.p2){
@@ -94,11 +94,11 @@ function createLaser(player, isPressed){
         p2L.style.top = p2LaserPos.y + "px"
         p2L.classList.add('created2')
         container.appendChild(p2L)
-        moveLaser()
+        moveLaser('p2')
     }
 }
 
-function moveLaser(){
+function moveLaser(calledFor){
     if(p1LaserPos.x > window.innerWidth - 20 - 30){
         isMoving.p1 = false;
         lasers = document.getElementsByClassName('created1');
@@ -106,7 +106,7 @@ function moveLaser(){
             lasers[i].remove();
         };
     }
-    else{
+    else if(calledFor === 'p1'){
         isMoving.p1 = true;
         p1LaserPos.x += LASER_MOVEMENT;
         p1L.style.left = p1LaserPos.x + "px"
@@ -119,7 +119,7 @@ function moveLaser(){
             lasers[i].remove();
         };
     }
-    else{
+    else if(calledFor === 'p2'){
         isMoving.p2 = true;
         p2LaserPos.x -= LASER_MOVEMENT;
         p2L.style.left = p2LaserPos.x + "px"
@@ -145,9 +145,9 @@ function loop() {
         handleControls();
         setPosition();
         if(isMoving.p1)
-            moveLaser();
+            moveLaser('p1');
         if(isMoving.p2)
-            moveLaser();
+            moveLaser('p2');
         lastLoopRun = new Date().getTime();
     }
     setTimeout(loop, 2);
