@@ -221,7 +221,7 @@ function collision(){
     if(isMoving.p1){
         if(isColliding(p1Laser, p2Pos, null, null) && collision1 == 0){
             collision1++;
-            health.p2 -= 5;
+            health.p2 -= Math.floor(Math.random() * 6);
             updateHealth();
         }
     }
@@ -229,7 +229,7 @@ function collision(){
     if(isMoving.p2){
         if(isColliding(null, null, p2Laser, p1Pos) && collision2 == 0){
             collision2++;
-            health.p1 -= 5;
+            health.p1 -= Math.floor(Math.random() * 6);
             updateHealth();
         }
     }
