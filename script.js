@@ -7,7 +7,7 @@ let P2_CTRL = 191; // '/'
 let START = 32; // 'SPACE'
 
 let PLAYER_MOVEMENT = 4;
-let LASER_MOVEMENT = 20;
+let LASER_MOVEMENT = 40;
 
 let player1 = document.getElementsByClassName("player1")[0];
 let player2 = document.getElementsByClassName("player2")[0];
@@ -17,6 +17,8 @@ let startText = document.getElementsByClassName('text')[0]
 let healthDiv = document.getElementsByClassName('health')[0]
 let p1HealthDiv = document.getElementsByClassName('p1HealthDiv')[0]
 let p2HealthDiv = document.getElementsByClassName('p2HealthDiv')[0]
+let winsScreen = document.getElementsByClassName('winsScreen')[0]
+let winsDiv = document.getElementsByClassName('winsDiv')[0]
 
 let p1y = window.innerHeight / 2 - 35;
 let p2y = window.innerHeight / 2 - 35;
@@ -50,6 +52,8 @@ let wins = {
     p1: 0,
     p2: 0
 }
+
+let gameCount = 0;
 
 function toggleKey(keyCode, isPressed) {
     if (keyCode == P1_UP) {
@@ -218,7 +222,6 @@ function collision(){
         if(isColliding(p1Laser, p2Pos, null, null) && collision1 == 0){
             collision1++;
             health.p2 -= 5;
-            console.log('colliding with 2')
             updateHealth();
         }
     }
@@ -228,7 +231,6 @@ function collision(){
             collision2++;
             health.p1 -= 5;
             updateHealth();
-            console.log('colliding with 1')
         }
     }
 }
@@ -247,7 +249,7 @@ function checkHealth(){
         if(health.p2 <= 0){
             wins.p1++;
         }
-        showWinsScreen(); // Create a wins screen
+        showWinsScreen();
     }
 }
 
@@ -262,17 +264,58 @@ function deleteLasers(){
     };
 }
 
+function declareWinner(){
+    if((gameCount === 5 && wins.p1 > wins.p2) || wins.p1 === 3){
+        winsDiv.innerHTML = `
+        Player 1 - Won: ${wins.p1} <br />
+        Player 2 - Won: ${wins.p2} <br />
+        Player 1 won the match! <br /> <br />
+        PRESS <code>"SPACE"</code> TO START
+        `
+        wins.p1 = 0;
+        wins.p2 = 0;
+        gameCount = 0;
+    }
+    if((gameCount === 5 && wins.p2 > wins.p1) || wins.p2 === 3){
+        winsDiv.innerHTML = `
+        Player 1 - Won: ${wins.p1} <br />
+        Player 2 - Won: ${wins.p2} <br />
+        Player 2 won the match! <br /> <br />
+        PRESS <code>"SPACE"</code> TO START
+        `
+        wins.p1 = 0;
+        wins.p2 = 0;
+        gameCount = 0;
+    }
+}
+
+function showWinsScreen(){
+    winsScreen.style.display = 'block'
+    winsDiv.innerHTML = `
+    Player 1 - Won: ${wins.p1} <br />
+    Player 2 - Won: ${wins.p2} <br /> <br />
+    PRESS <code>"SPACE"</code> TO START
+    `;
+    declareWinner();
+}
+
 function startGame(){
     isGameOn = true;
     container.classList.remove('start_screen')
     startText.style.display = 'none';
+    
     healthDiv.style.display = 'flex';
     health.p1 = 100;
     health.p2 = 100;
     updateHealth();
+
     deleteLasers();
+    
     p1y = window.innerHeight / 2 - 35;
     p2y = window.innerHeight / 2 - 35;
+    
+    winsScreen.style.display = 'none'
+    gameCount++;
     loop();
 }
 
