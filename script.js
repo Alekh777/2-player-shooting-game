@@ -46,6 +46,11 @@ let health = {
     p2: 100
 }
 
+let wins = {
+    p1: 0,
+    p2: 0
+}
+
 function toggleKey(keyCode, isPressed) {
     if (keyCode == P1_UP) {
         controller.p1Up = isPressed;
@@ -233,6 +238,30 @@ function updateHealth(){
     p2HealthDiv.innerHTML = `${health.p2}`
 }
 
+function checkHealth(){
+    if(health.p1 <= 0 || health.p2 <= 0){
+        isGameOn = false;
+        if(health.p1 <= 0){
+            wins.p2++;
+        }
+        if(health.p2 <= 0){
+            wins.p1++;
+        }
+        showWinsScreen(); // Create a wins screen
+    }
+}
+
+function deleteLasers(){
+    lasers1 = document.getElementsByClassName('created1');
+    for(i = 0; i < lasers1.length; i++) {
+        lasers1[i].remove();
+    };
+    lasers2 = document.getElementsByClassName('created2');
+    for(i = 0; i < lasers2.length; i++) {
+        lasers2[i].remove();
+    };
+}
+
 function startGame(){
     isGameOn = true;
     container.classList.remove('start_screen')
@@ -241,6 +270,9 @@ function startGame(){
     health.p1 = 100;
     health.p2 = 100;
     updateHealth();
+    deleteLasers();
+    p1y = window.innerHeight / 2 - 35;
+    p2y = window.innerHeight / 2 - 35;
     loop();
 }
 
@@ -253,9 +285,11 @@ function loop() {
         if(isMoving.p2)
             moveLaser('p2');
         collision();
+        checkHealth();
         lastLoopRun = new Date().getTime();
     }
-    setTimeout(loop, 2);
+    if(isGameOn)
+        setTimeout(loop, 2);
 }
 
 document.onkeydown = function (evt) {
