@@ -44,8 +44,8 @@ let p2L = document.createElement('div');
 let isGameOn = false;
 
 let health = {
-    p1: 100,
-    p2: 100
+    p1: 20,
+    p2: 20
 }
 
 let wins = {
@@ -305,8 +305,8 @@ function startGame(){
     startText.style.display = 'none';
     
     healthDiv.style.display = 'flex';
-    health.p1 = 100;
-    health.p2 = 100;
+    health.p1 = 20;
+    health.p2 = 20;
     updateHealth();
 
     deleteLasers();
