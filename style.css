@@ -33,7 +33,7 @@ body, html{
 
 .laser{
     width: 40px;
-    height: 5px;
+    height: 6px;
     position: absolute;
     display: none;
     background-color: red;

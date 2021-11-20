@@ -39,7 +39,6 @@ let p2L = document.createElement('div');
 let isGameOn = false;
 
 function toggleKey(keyCode, isPressed) {
-    console.log(keyCode)
     if (keyCode == P1_UP) {
         controller.p1Up = isPressed;
     }
@@ -150,6 +149,73 @@ function setBoundary(){
     if(p2y > (window.innerHeight - 20 - 35 - 20 - 20)) p2y = window.innerHeight - 20 - 35 - 20 - 20;
 }
 
+function isColliding(p1Laser, p2Pos, p2Laser, p1Pos){
+    if(p1Laser){
+        if( ( p1Laser.x2 >= p2Pos.x1 ) && ( (p1Laser.y2 >= p2Pos.y1) && (p1Laser.y1 <= p2Pos.y2) ) ){
+            return true;
+        }
+        else
+            return false;
+    }
+    
+    if(p2Laser){
+        if( ( p2Laser.x1 <= p1Pos.x2 ) && ( (p2Laser.y2 >= p1Pos.y1) && (p2Laser.y1 <= p1Pos.y2) ) ){
+            return true;
+        }
+        else
+            return false;
+    }
+}
+
+let collision1 = 0;
+let collision2 = 0;
+
+function collision(){
+    if(!isMoving.p1) collision1 = 0;
+    if(!isMoving.p2) collision2 = 0;
+    let p1Laser = {
+        x1: p1LaserPos.x,
+        x2: p1LaserPos.x + 40,
+        y1: p1LaserPos.y,
+        y2: p1LaserPos.y + 6
+     }
+ 
+     let p2Pos = {
+         x1: window.innerWidth - 70 - 20,
+         x2: window.innerWidth - 20,
+         y1: p2y,
+         y2: p2y + 70
+    }
+
+    let p2Laser = {
+        x1: p2LaserPos.x,
+        x2: p2LaserPos.x + 40,
+        y1: p2LaserPos.y,
+        y2: p2LaserPos.y + 6
+    }
+
+    let p1Pos = {
+            x1: 20,
+            x2: 70 + 20,
+            y1: p1y,
+            y2: p1y + 70
+    }
+
+    if(isMoving.p1){
+        if(isColliding(p1Laser, p2Pos, null, null) && collision1 == 0){
+            collision1++;
+            console.log('colliding with 2')
+        }
+    }
+
+    if(isMoving.p2){
+        if(isColliding(null, null, p2Laser, p1Pos) && collision2 == 0){
+            collision2++;
+            console.log('colliding with 1')
+        }
+    }
+}
+
 function startGame(){
     isGameOn = true;
     container.classList.remove('start_screen')
@@ -165,6 +231,7 @@ function loop() {
             moveLaser('p1');
         if(isMoving.p2)
             moveLaser('p2');
+        collision();
         lastLoopRun = new Date().getTime();
     }
     setTimeout(loop, 2);
