@@ -38,3 +38,20 @@ body, html{
     display: none;
     background-color: red;
 }
+
+.start_screen{
+    position: absolute;
+    z-index: 5;
+    opacity: 0.7;
+}
+
+.text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    color: white;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}

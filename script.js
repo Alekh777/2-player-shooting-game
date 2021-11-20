@@ -4,6 +4,7 @@ let P1_CTRL = 86; // 'V'
 let P2_UP = 38; // 'UP_ARROW'
 let P2_DOWN = 40; // 'DOWN_ARROW'
 let P2_CTRL = 191; // '/'
+let START = 32; // 'SPACE'
 
 let PLAYER_MOVEMENT = 4;
 let LASER_MOVEMENT = 15;
@@ -12,6 +13,7 @@ let player1 = document.getElementsByClassName("player1")[0];
 let player2 = document.getElementsByClassName("player2")[0];
 let laser = document.getElementsByClassName("laser")[0];
 let container = document.getElementsByClassName("container")[0]
+let startText = document.getElementsByClassName('text')[0]
 
 let p1y = window.innerHeight / 2 - 35;
 let p2y = window.innerHeight / 2 - 35;
@@ -26,7 +28,18 @@ let p2LaserPos = {
     y: p2y + 33
 }
 
+isMoving = {
+    p1: false,
+    p2: false
+}
+
+let p1L = document.createElement('div');
+let p2L = document.createElement('div');
+
+let isGameOn = false;
+
 function toggleKey(keyCode, isPressed) {
+    console.log(keyCode)
     if (keyCode == P1_UP) {
         controller.p1Up = isPressed;
     }
@@ -44,6 +57,9 @@ function toggleKey(keyCode, isPressed) {
     }
     if(keyCode == P2_CTRL){
         createLaser('p2', isPressed)
+    }
+    if(keyCode == START && !isGameOn){
+        startGame();
     }
 }
 
@@ -66,35 +82,29 @@ function handleControls() {
     setBoundary();
 }
 
-isMoving = {
-    p1: false,
-    p2: false
-}
-
-let p1L = document.createElement('div');
-let p2L = document.createElement('div');
-
 function createLaser(player, isPressed){
-    if(player === 'p1' && isPressed && !isMoving.p1){
-        p1L = laser.cloneNode(true)
-        p1L.style.display = 'block'
-        p1LaserPos.x = 55 + 40;
-        p1LaserPos.y = p1y + 33;
-        p1L.style.top = p1LaserPos.y + "px"
-        p1L.classList.add('created1')
-        container.appendChild(p1L)
-        moveLaser('p1')
-    }
-    
-    if(player === 'p2' && isPressed && !isMoving.p2){
-        p2L = laser.cloneNode(true)
-        p2L.style.display = 'block'
-        p2LaserPos.x = window.innerWidth - 70 - 40 - 20 - 5;
-        p2LaserPos.y = p2y + 33;
-        p2L.style.top = p2LaserPos.y + "px"
-        p2L.classList.add('created2')
-        container.appendChild(p2L)
-        moveLaser('p2')
+    if(isGameOn){
+        if(player === 'p1' && isPressed && !isMoving.p1){
+            p1L = laser.cloneNode(true)
+            p1L.style.display = 'block'
+            p1LaserPos.x = 55 + 40;
+            p1LaserPos.y = p1y + 33;
+            p1L.style.top = p1LaserPos.y + "px"
+            p1L.classList.add('created1')
+            container.appendChild(p1L)
+            moveLaser('p1')
+        }
+        
+        if(player === 'p2' && isPressed && !isMoving.p2){
+            p2L = laser.cloneNode(true)
+            p2L.style.display = 'block'
+            p2LaserPos.x = window.innerWidth - 70 - 40 - 20 - 5;
+            p2LaserPos.y = p2y + 33;
+            p2L.style.top = p2LaserPos.y + "px"
+            p2L.classList.add('created2')
+            container.appendChild(p2L)
+            moveLaser('p2')
+        }
     }
 }
 
@@ -140,6 +150,13 @@ function setBoundary(){
     if(p2y > (window.innerHeight - 20 - 35 - 20 - 20)) p2y = window.innerHeight - 20 - 35 - 20 - 20;
 }
 
+function startGame(){
+    isGameOn = true;
+    container.classList.remove('start_screen')
+    startText.style.display = 'none'
+    loop();
+}
+
 function loop() {
     if (new Date().getTime() - lastLoopRun > 15) {
         handleControls();
@@ -152,8 +169,6 @@ function loop() {
     }
     setTimeout(loop, 2);
 }
-
-loop();
 
 document.onkeydown = function (evt) {
     toggleKey(evt.keyCode, true);
