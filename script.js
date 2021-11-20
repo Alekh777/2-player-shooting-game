@@ -7,13 +7,16 @@ let P2_CTRL = 191; // '/'
 let START = 32; // 'SPACE'
 
 let PLAYER_MOVEMENT = 4;
-let LASER_MOVEMENT = 15;
+let LASER_MOVEMENT = 20;
 
 let player1 = document.getElementsByClassName("player1")[0];
 let player2 = document.getElementsByClassName("player2")[0];
 let laser = document.getElementsByClassName("laser")[0];
 let container = document.getElementsByClassName("container")[0]
 let startText = document.getElementsByClassName('text')[0]
+let healthDiv = document.getElementsByClassName('health')[0]
+let p1HealthDiv = document.getElementsByClassName('p1HealthDiv')[0]
+let p2HealthDiv = document.getElementsByClassName('p2HealthDiv')[0]
 
 let p1y = window.innerHeight / 2 - 35;
 let p2y = window.innerHeight / 2 - 35;
@@ -37,6 +40,11 @@ let p1L = document.createElement('div');
 let p2L = document.createElement('div');
 
 let isGameOn = false;
+
+let health = {
+    p1: 100,
+    p2: 100
+}
 
 function toggleKey(keyCode, isPressed) {
     if (keyCode == P1_UP) {
@@ -204,22 +212,35 @@ function collision(){
     if(isMoving.p1){
         if(isColliding(p1Laser, p2Pos, null, null) && collision1 == 0){
             collision1++;
+            health.p2 -= 5;
             console.log('colliding with 2')
+            updateHealth();
         }
     }
 
     if(isMoving.p2){
         if(isColliding(null, null, p2Laser, p1Pos) && collision2 == 0){
             collision2++;
+            health.p1 -= 5;
+            updateHealth();
             console.log('colliding with 1')
         }
     }
 }
 
+function updateHealth(){
+    p1HealthDiv.innerHTML = `${health.p1}`
+    p2HealthDiv.innerHTML = `${health.p2}`
+}
+
 function startGame(){
     isGameOn = true;
     container.classList.remove('start_screen')
-    startText.style.display = 'none'
+    startText.style.display = 'none';
+    healthDiv.style.display = 'flex';
+    health.p1 = 100;
+    health.p2 = 100;
+    updateHealth();
     loop();
 }
 

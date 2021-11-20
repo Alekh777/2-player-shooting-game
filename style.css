@@ -55,3 +55,20 @@ body, html{
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+.health{
+    height: 20px;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(92, 92, 92, 0.39);
+    color: white;
+    padding: 0 100px;
+    font-size: 20px;
+    display: none;
+    justify-content: space-between;
+}
+
+.p1HealthDiv, .p2HealthDiv{
+    width: 50px;
+    height: 100%;
+}
